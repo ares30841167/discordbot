@@ -1,0 +1,17 @@
+FROM node:16.9.1-alpine3.14
+
+LABEL maintainer="GUAN-YU CHEN <areschen@outlook.com>"
+
+RUN apk add make libtool autoconf automake gcc g++ libc-dev python3
+
+WORKDIR /discordbot
+
+USER 1000:1000
+
+# docker build . -f Dockerfile.dev -t discordbot-dev
+# docker run -it --rm --env-file .env -v <專案絕對路徑>:/discordbot discordbot-dev /bin/bash
+
+# e.g
+# Windows/CMD:        docker run -it --rm --env-file .env -v C:\\Users\\使用者名稱\\Desktop\\discordbot\\:/discordbot discordbot-dev /bin/sh
+# Windows/PowerShell: docker run -it --rm --env-file .env -v ${pwd}:/discordbot discordbot-dev /bin/sh
+# Ubuntu:             docker run -it --rm --env-file .env -v $(pwd):/discordbot discordbot-dev /bin/sh

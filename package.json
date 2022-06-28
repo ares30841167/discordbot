@@ -101,6 +101,6 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node bot.js"
+    "start": "node src/main.js"
   }
 }
