@@ -30,18 +30,10 @@ client.on('ready', () => {
     console.log(`已以 ${client.user.tag} 身分登入Discord!`);
 });
 
-client.on('guildMemberUpdate', (oldOne, newOne) => {
-    if(oldOne.user.username === "TalkToGod") {  // 將冠宇的名子改成邊的名子
-        console.log("邊改名了，所以冠宇也跟著改名了。");
-        const guild = client.guilds.cache.find(guild => guild.id === '582584598823960619');
-        guild.members.cache.find(members => members.id === '351585369298567168').setNickname(newOne.nickname);
-    }
-});
-
 client.on('messageCreate', message => {
     if(message.author != client.user){
 
-        //節慶
+        // 節慶
         if(message.content.includes("聖誕")){ // 聖誕節快樂
             message.channel.send({
                 files: [{
@@ -162,10 +154,6 @@ client.on('messageCreate', message => {
     }
 });
 
-client.on('disconnect', () => {
-    
-});
-
 client.on('interactionCreate', async interaction => {
 
     if (!interaction.isCommand()) return;
@@ -177,12 +165,6 @@ client.on('interactionCreate', async interaction => {
             break;
     }
 
-});
-
-client.on('guildMemberAdd', member => {
-    if(member.user.id == "623554280237826069"){ // 踢掉討厭鬼
-        member.kick();
-    }
 });
 
 client.login(process.env.DISCORD_TOKEN);
