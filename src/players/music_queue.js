@@ -8,27 +8,36 @@ class MusicQueue {
     this.#current = -1;
   }
 
-  AddAudioResource(resource) {
+  addAudioResource(resource) {
     this.#store.push(resource);
   }
 
-  HasNextResource() {
+  replaceCurrentAudioResource(resource) {
+    this.#store[this.#current] = resource;
+  }
+
+  hasNextResource() {
     if(this.#current + 1 < this.#store.length)
       return true;
     else
       return false;
   }
 
-  GetNextResource() {
-    if(this.#current + 1 >= this.#store.length) return;
+  getCurrentResource() {
+    if(this.#current == -1) return null;
+    return this.#store[this.#current];
+  }
+
+  getNextResource() {
+    if(this.#current + 1 >= this.#store.length) return null;
     return this.#store[++this.#current];
   }
 
-  GetCurrentIndex() {
+  getCurrentIndex() {
     return this.#current;
   }
 
-  Clean() {
+  clean() {
     this.#store = [];
     this.#current = -1;
   }

@@ -1,7 +1,15 @@
+const { createReadStream } = require('fs')
 const EventEmitter = require('events');
 const ytdl = require('ytdl-core');
 const { MusicQueue } = require('./music_queue');
-const { createAudioResource, createAudioPlayer, joinVoiceChannel, AudioPlayerStatus, VoiceConnectionStatus, PlayerSubscription } = require('@discordjs/voice');
+const { createAudioResource, createAudioPlayer, joinVoiceChannel, AudioPlayerStatus, VoiceConnectionStatus } = require('@discordjs/voice');
+
+const AUDIO_PLAYER_IDLING_STATE = [
+  AudioPlayerStatus.Idle,
+  AudioPlayerStatus.Paused,
+  AudioPlayerStatus.AutoPaused
+]
+
 class AudioPlayer extends EventEmitter {
   
   #disconnectTimer;
@@ -12,8 +20,11 @@ class AudioPlayer extends EventEmitter {
   #connectionStatus;
   #playerStatus;
 
+  #looping;
+
   constructor() {
     super();
+    this.#looping = false;
     this.#musicQueue = new MusicQueue();
     this.#player = createAudioPlayer();
     this.#initialPlayer();
@@ -67,9 +78,10 @@ class AudioPlayer extends EventEmitter {
 
   disconnectVoiceChannel() {
     this.#stopDisconnectTimer();
-    this.#musicQueue.Clean();
+    this.#musicQueue.clean();
     this.#player.stop();
     this.#connection.destroy();
+    this.#connection = null;
 
     console.log("已從語音頻道斷開");
   }
@@ -87,8 +99,8 @@ class AudioPlayer extends EventEmitter {
     return youtubeStream;
   }
 
-  #createAudioResource(source) {
-    const resource = createAudioResource(source, { inlineVolume: true });
+  #createAudioResource(source, metadata) {
+    const resource = createAudioResource(source, { inlineVolume: true, metadata: metadata });
     resource.volume.setVolume(0.6);
 
     return resource;
@@ -97,6 +109,11 @@ class AudioPlayer extends EventEmitter {
   #play(audioResource) {
     if(this.#player == null) {
       console.error('AudioPlayer: 請先初始化@discordjs/voice/AudioPlayer');
+      return;
+    }
+
+    if(audioResource == null) {
+      console.error('AudioPlayer: 請指定播放音訊資源或播放佇列已到結尾');
       return;
     }
 
@@ -113,23 +130,73 @@ class AudioPlayer extends EventEmitter {
     this.#connection.subscribe(this.#player);
   }
 
+  #replay(audioResource) {
+    switch(audioResource.metadata.type) {
+      case 'file':
+        this.#musicQueue.replaceCurrentAudioResource(
+          this.#createAudioResource(
+            createReadStream(audioResource.metadata.uri),
+            audioResource.metadata
+          )
+        );
+        break;
+      case 'youtube':
+        this.#musicQueue.replaceCurrentAudioResource(
+          this.#createAudioResource(
+            this.#getYoutubeStream(audioResource.metadata.uri),
+            audioResource.metadata
+          )
+        );
+        break;
+      default:
+        return;
+    }
+
+    this.#play(this.#musicQueue.getCurrentResource());
+  }
+
   #tryToPlayNextResource() {
-    if(this.#playerStatus === AudioPlayerStatus.Idle
-        && this.#musicQueue.HasNextResource())
-      this.#play(this.#musicQueue.GetNextResource());
+    if(!AUDIO_PLAYER_IDLING_STATE.includes(this.#playerStatus))
+      return;
+
+    if(this.#musicQueue.getCurrentIndex() != -1 && this.#looping)
+      this.#replay(this.#musicQueue.getCurrentResource());
+    else
+      this.#play(this.#musicQueue.getNextResource());
+  }
+
+  toggleLooping() {
+    this.#looping = !this.#looping;
+
+    return this.#looping;
   }
 
   playLocal(filePath) {
-    const audioResource = this.#createAudioResource(filePath);
-    this.#musicQueue.AddAudioResource(audioResource);
+    const audioResource = this.#createAudioResource(
+      createReadStream(filePath),
+      {
+        type: 'file',
+        uri: filePath
+      }
+    );
+    this.#musicQueue.addAudioResource(audioResource);
     this.#tryToPlayNextResource();
   }
 
   playYoutube(url) {
     const audioResource = this.#createAudioResource(
-      this.#getYoutubeStream(url)
+      this.#getYoutubeStream(url),
+      {
+        type: 'youtube',
+        uri: url
+      }
     );
-    this.#musicQueue.AddAudioResource(audioResource);
+    this.#musicQueue.addAudioResource(audioResource);
+    this.#tryToPlayNextResource();
+  }
+
+  skip() {
+    this.#player.stop();
     this.#tryToPlayNextResource();
   }
 }
