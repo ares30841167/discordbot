@@ -1,20 +1,22 @@
-FROM node:16.9.1
+FROM node:16.9.1-alpine3.14
 
 LABEL maintainer="GUAN-YU CHEN <areschen@outlook.com>"
 
-COPY package.json yarn.lock /discordBot/
+RUN apk add make libtool autoconf automake gcc g++ libc-dev python3
 
-WORKDIR /discordBot
+COPY package.json yarn.lock /discordbot/
+
+WORKDIR /discordbot
 
 RUN yarn global add pm2 && yarn install
 
-COPY assets /discordBot/assets
+COPY assets /discordbot/assets
 
-COPY bot.js /discordBot
+COPY src /discordbot/src
 
 USER 1000:1000
 
-ENTRYPOINT [ "node", "bot.js" ]
+ENTRYPOINT [ "node", "src/main.js" ]
 
 # docker build . -t discordbot
 # docker run -d -it --rm --env-file .env discordbot
