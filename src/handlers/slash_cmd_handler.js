@@ -3,8 +3,6 @@ const { generateSkipMusicEmbed } = require('../templates/embeds/skip_music');
 const { generateResetAudioPlayerEmbed } = require('../templates/embeds/reset_audio_player');
 const { generateToggleAudioPlayerLoopingEmbed } = require('../templates/embeds/toggle_audio_player_looping');
 
-const SONG_REQUEST_CHANNEL_ID = '582586819577774105';
-
 function slashCommandHandler(client, interaction, audioPlayer) {
 
     if (!interaction.isCommand()) return;
@@ -18,8 +16,8 @@ function slashCommandHandler(client, interaction, audioPlayer) {
                 return;
             }
 
-            if(interaction.channel.id != SONG_REQUEST_CHANNEL_ID){   //在非點歌頻道中點歌
-                const c = client.channels.cache.get(SONG_REQUEST_CHANNEL_ID);
+            if(interaction.channel.id != process.env.SONG_REQUEST_CHANNEL_ID){   //在非點歌頻道中點歌
+                const c = client.channels.cache.get(process.env.SONG_REQUEST_CHANNEL_ID);
                 if(c == null)
                     interaction.reply("還敢不在點歌頻道裡點歌阿！");
                 else
