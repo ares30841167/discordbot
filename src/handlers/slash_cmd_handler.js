@@ -50,11 +50,13 @@ function slashCommandHandler(client, interaction, audioPlayer) {
                     interaction.reply({ embeds: [generateToggleAudioPlayerLoopingEmbed(looping)] });
                     break;
                 default:
+                    interaction.reply("未知的MusicBot控制指令");
                     break;
             }
             break;
         
         default:
+            interaction.reply("未知的指令");
             break;
     }
 }

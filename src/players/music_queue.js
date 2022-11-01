@@ -3,9 +3,13 @@ class MusicQueue {
   #store;
   #current;
   
-  constructor() {
-    this.#store = [];
-    this.#current = -1;
+  constructor(store = [], current = -1) {
+    this.#store = store;
+    this.#current = current;
+  }
+
+  getStore() {
+    return this.#store;
   }
 
   addAudioResource(resource) {
