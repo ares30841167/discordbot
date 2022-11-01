@@ -1,4 +1,4 @@
-FROM node:16.9.1-alpine3.14
+FROM node:16.12.0-alpine3.14
 
 LABEL maintainer="GUAN-YU CHEN <areschen@outlook.com>"
 
