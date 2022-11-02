@@ -9,7 +9,7 @@ jest-test:
   tags:
     - areschen-server-1
   cache:
-    key: $CI_COMMIT_REF_SLUG
+    key: node_dep_modules
     paths:
       - node_modules/
   before_script:
