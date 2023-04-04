@@ -1,5 +1,6 @@
 const { AudioPlayerStatus } = require('@discordjs/voice');
 const { generatePictureAssetPath, generateAudioAssetPath } = require('../utils/asset_uri_generator');
+const { sendStealPantsMessage } = require('../utils/steal_pants_message_sender');
 
 function messageHandler(client, message, audioPlayer) {
     
@@ -92,12 +93,7 @@ function messageHandler(client, message, audioPlayer) {
             audioPlayer.connectVoiceChannel(message.member.voice.channel);
             audioPlayer.playLocal(generateAudioAssetPath('steal.mp3'));
             audioPlayer.once(AudioPlayerStatus.Idle, () => {
-                if(pickedUser.nickname != null){
-                    message.channel.send(pickedUser.nickname+" 的內褲被和真偷了!");
-                }
-                else{
-                    message.channel.send(pickedUser.user.username+" 的內褲被和真偷了!");
-                }
+                sendStealPantsMessage(message, pickedUser);
                 console.log("steal.mp3播放完畢!");
             });
         }

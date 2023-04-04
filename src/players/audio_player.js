@@ -35,6 +35,18 @@ class AudioPlayer extends EventEmitter {
     });
   }
 
+  getPlayer() {
+    return this.#player;
+  }
+
+  getConnection() {
+    return this.#connection;
+  }
+
+  getDisconnectTimer() {
+    return this.#disconnectTimer;
+  }
+
   #initialPlayer() {
     this.#playerStatus = AudioPlayerStatus.Idle;
     this.#player.on('stateChange', (_, newState) => this.#playerStatus = newState.status);
@@ -80,7 +92,8 @@ class AudioPlayer extends EventEmitter {
     this.#stopDisconnectTimer();
     this.#musicQueue.clean();
     this.#player.stop();
-    this.#connection.destroy();
+    if(this.#connection != null)
+      this.#connection.destroy();
     this.#connection = null;
 
     console.log("已從語音頻道斷開");

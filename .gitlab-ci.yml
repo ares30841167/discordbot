@@ -1,6 +1,28 @@
 stages:
+  - test
   - build
   - release
+
+jest-test:
+  image: node:16.12.0-alpine3.14
+  stage: test
+  tags:
+    - areschen-server-1
+  cache:
+    key: node_dep_modules
+    paths:
+      - node_modules/
+  before_script:
+    - apk add make libtool autoconf automake gcc g++ libc-dev python3
+    - yarn install
+  script:
+    - yarn test:ci
+  coverage: /Lines\s*:\s*\d+.\d+\%/
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
 
 docker-build-dev:
   image: docker:20.10.15
