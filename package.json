@@ -1,6 +1,6 @@
 {
   "name": "discordbot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "bot.js",
   "repository": {
     "type": "git",
@@ -40,7 +40,7 @@
     "delegates": "^1.0.0",
     "detect-libc": "^1.0.3",
     "discord-api-types": "^0.23.1",
-    "discord.js": "^13.1.0",
+    "discord.js": "^13.15.0",
     "env-paths": "^2.2.1",
     "event-target-shim": "^5.0.1",
     "ffmpeg-static": "^4.4.0",
@@ -96,7 +96,7 @@
     "wrappy": "^1.0.2",
     "ws": "^7.5.5",
     "yallist": "^4.0.0",
-    "ytdl-core": "^4.11.2",
+    "ytdl-core": "^4.11.3",
     "ytsr": "^3.5.3"
   },
   "scripts": {
