@@ -26,6 +26,12 @@ const client = new Client({ intents:
     ]
 });
 
+audioPlayer.on('resourceEndedError', () => {
+    client.channels.cache
+        .get(process.env.SONG_REQUEST_CHANNEL_ID)
+        .send('❌當前歌曲發生錯誤，跳過當前歌曲並播放佇列中下首歌曲');
+});
+
 client.on('ready', () => {
     registerSlashCommands();
     console.log(`已以 ${client.user.tag} 身分登入Discord!`);
