@@ -1,6 +1,6 @@
 {
   "name": "discordbot",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "bot.js",
   "repository": {
     "type": "git",
@@ -96,7 +96,7 @@
     "wrappy": "^1.0.2",
     "ws": "^7.5.5",
     "yallist": "^4.0.0",
-    "ytdl-core": "^4.11.3",
+    "ytdl-core": "^4.11.4",
     "ytsr": "^3.5.3"
   },
   "scripts": {
