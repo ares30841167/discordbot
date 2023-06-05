@@ -136,6 +136,13 @@ class AudioPlayer extends EventEmitter {
       return;
     }
 
+    if(audioResource.ended) {
+      console.error('AudioPlayer: 音訊資源發生錯誤，音訊資源已處於結束狀態');
+      this.skip();
+      this.emit('resourceEndedError');
+      return;
+    }
+
     this.#stopDisconnectTimer();
 
     this.#player.play(audioResource);

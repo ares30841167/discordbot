@@ -1,6 +1,6 @@
 {
   "name": "discordbot",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "bot.js",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
     "@discordjs/builders": "^0.6.0",
     "@discordjs/opus": "^0.6.0",
     "@discordjs/rest": "^0.1.0-canary.0",
-    "@discordjs/voice": "^0.6.0",
+    "@discordjs/voice": "^0.16.0",
     "abbrev": "^1.1.1",
     "abort-controller": "^3.0.0",
     "agent-base": "^6.0.2",
@@ -96,7 +96,7 @@
     "wrappy": "^1.0.2",
     "ws": "^7.5.5",
     "yallist": "^4.0.0",
-    "ytdl-core": "^4.11.3",
+    "ytdl-core": "4.9.1",
     "ytsr": "^3.5.3"
   },
   "scripts": {
