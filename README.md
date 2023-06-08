@@ -4,6 +4,10 @@
 ## Description
 This is a Discord bot for my own Discord guild called "元智宅砲一家親".
 
+This Discord bot is neither a generic one nor a bot template. All the functions are built to suit my own needs.
+So if you need a good template to start building your own bot, you are looking in the wrong place.
+But if you are looking for some reference of the function implementation, welcome to look around.
+
 For now, this bot has these function listed below:
 - Make a reaction to the text message sent from our members by listening to certain keywords.
 - Play a sound effect for the reaction that the bot made to the text message.
