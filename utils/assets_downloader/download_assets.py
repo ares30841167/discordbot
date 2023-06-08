@@ -25,8 +25,17 @@ def new_minio_client():
           )
 
 def clean_assets_folder():
-  for f in os.listdir(ASSETS_FOLDER):
-    shutil.rmtree(os.path.join(ASSETS_FOLDER, f))
+  for filename in os.listdir(ASSETS_FOLDER):
+    if(filename == '.gitkeep'): continue
+    filepath = os.path.join(ASSETS_FOLDER, filename)
+    try:
+        if os.path.isfile(filepath) or os.path.islink(filepath):
+            os.unlink(filepath)
+        elif os.path.isdir(filepath):
+            shutil.rmtree(filepath)
+    except Exception as e:
+        print('Failed to delete %s. Reason: %s' % (filepath, e))
+        exit(1)
  
 def download_assets():
   client = new_minio_client()
