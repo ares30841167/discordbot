@@ -131,3 +131,7 @@ dist
 
 # junit.xml
 junit.xml
+
+# Assets folder
+assets/*
+!assets/.gitkeep
