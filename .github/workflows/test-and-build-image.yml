@@ -1,0 +1,90 @@
+name: Test And Build Image
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+  pull_request:
+    branches:
+      - main
+
+env:
+  MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
+  MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
+
+jobs:
+  test:
+    name: Test with Node.js 16.12.0
+    runs-on: [ ubuntu-22.04 ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16.12.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.12.0
+
+      - name: yarn install and test
+        run: |
+          yarn install
+          yarn test:ci
+
+  build:
+    name: Build the docker image
+    runs-on: [ ubuntu-22.04 ]
+
+    if: ${{ success() && github.event_name != 'pull_request' }}
+    needs: [ test ]
+    
+    env:
+      REGISTRY: harbor.guanyu.dev
+      PROJECT_NAME: discordbot
+      IMAGE_NAME: discordbot
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install Python modules
+        run: pip install -r utils/assets_downloader/requirements.txt
+
+      - name: Download assets
+        working-directory: ./utils/assets_downloader
+        run: python download_assets.py
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+          
+      - name: Set up preview image tag name
+        run: |
+          echo "TAG_NAME=$(git rev-parse --short HEAD).${GITHUB_RUN_ID}" >> $GITHUB_ENV
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+
+      - name: Set up release image tag name
+        run: |
+          echo "TAG_NAME=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+
+      - name: Login to Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_TOKEN }}
+
+      - name: Build and push
+        run: |
+          docker build . -t ${{ env.REGISTRY }}/${{ env.PROJECT_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG_NAME }}
+          docker push ${{ env.REGISTRY }}/${{ env.PROJECT_NAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG_NAME }}
