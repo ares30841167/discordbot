@@ -3,6 +3,7 @@ const { Client, Intents } = require('discord.js');
 const { registerSlashCommands } = require('./utils/slash_cmd_registrator');
 const { messageHandler } = require('./handlers/message_handler');
 const { slashCommandHandler } = require('./handlers/slash_cmd_handler');
+const { buttonCommandHandler } = require('./handlers/button_cmd_handler');
 
 const audioPlayer = new AudioPlayer();
 
@@ -43,6 +44,10 @@ client.on('messageCreate', message => {
 
 client.on('interactionCreate', interaction => {
     slashCommandHandler(client, interaction, audioPlayer);
+});
+
+client.on('interactionCreate', interaction => {
+    buttonCommandHandler(client, interaction, audioPlayer);
 });
 
 client.login(process.env.DISCORD_TOKEN);
