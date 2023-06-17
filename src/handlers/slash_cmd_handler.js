@@ -2,6 +2,7 @@ const { generateYoutubeInfoEmbed } = require('../templates/embeds/youtube_infoma
 const { generateSkipMusicEmbed } = require('../templates/embeds/skip_music');
 const { generateResetAudioPlayerEmbed } = require('../templates/embeds/reset_audio_player');
 const { generateToggleAudioPlayerLoopingEmbed } = require('../templates/embeds/toggle_audio_player_looping');
+const { generateMusicPlayerCtrlActionRow } = require('../templates/rows/music_player_control_buttons');
 
 function slashCommandHandler(client, interaction, audioPlayer) {
 
@@ -30,7 +31,11 @@ function slashCommandHandler(client, interaction, audioPlayer) {
             switch(interaction.options.getSubcommand()){
                 case 'playsong':
                     audioPlayer.playYoutube(interaction.options.getString('url'));
-                    audioPlayer.once('youtubeInfo', (info) => interaction.reply({ embeds: [generateYoutubeInfoEmbed(info)] }));
+                    interaction.deferReply();
+                    audioPlayer.once('youtubeInfo', (info) => interaction.editReply({ 
+                        embeds: [generateYoutubeInfoEmbed(info)],
+                        components: [generateMusicPlayerCtrlActionRow()]
+                    }));
                     break;
                 case 'playlocal':
                     audioPlayer.playLocal(interaction.options.getString('file'));

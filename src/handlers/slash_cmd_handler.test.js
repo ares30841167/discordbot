@@ -40,6 +40,8 @@ function generateMockInteraction() {
       getString: jest.fn((type) => type),
     },
     reply: jest.fn(),
+    deferReply: jest.fn(),
+    editReply: jest.fn()
   }
 }
 
