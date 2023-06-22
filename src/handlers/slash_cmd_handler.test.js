@@ -69,9 +69,9 @@ describe('Test slashCommandHandler', () => {
       interaction.isCommand = jest.fn(() => false);
     });
 
-    test('When receiving any interaction', () => {
+    test('When receiving any interaction', async () => {
   
-      slashCommandHandler(client, interaction, audioPlayer);
+      await slashCommandHandler(client, interaction, audioPlayer);
   
       expect(interaction.reply).not.toHaveBeenCalled();
     });
@@ -84,10 +84,10 @@ describe('Test slashCommandHandler', () => {
       interaction.isCommand = jest.fn(() => true);
     });
 
-    test('When receiving a unknown interaction', () => {
+    test('When receiving a unknown interaction', async () => {
       interaction.commandName = null;
   
-      slashCommandHandler(client, interaction, audioPlayer);
+      await slashCommandHandler(client, interaction, audioPlayer);
   
       expect(interaction.reply).toHaveBeenCalledWith('未知的指令');
     });
@@ -98,10 +98,10 @@ describe('Test slashCommandHandler', () => {
         interaction.member.voice.channel = null;
       });
 
-      test('When receiving a musicbot interaction', () => {
+      test('When receiving a musicbot interaction', async () => {
         interaction.commandName = 'musicbot';
 
-        slashCommandHandler(client, interaction, audioPlayer);
+        await slashCommandHandler(client, interaction, audioPlayer);
     
         expect(interaction.reply).toHaveBeenCalledWith('請加入語音頻道以使用此功能!');
       });
@@ -120,10 +120,10 @@ describe('Test slashCommandHandler', () => {
           interaction.channel.id = '其他頻道';
         });
 
-        test('When receiving a musicbot interaction', () => {
+        test('When receiving a musicbot interaction', async () => {
           interaction.commandName = 'musicbot';
       
-          slashCommandHandler(client, interaction, audioPlayer);
+          await slashCommandHandler(client, interaction, audioPlayer);
       
           expect(interaction.reply).toHaveBeenCalledWith('還敢不在點歌頻道裡點歌阿！');
         });
@@ -136,68 +136,68 @@ describe('Test slashCommandHandler', () => {
           interaction.channel.id = '點歌頻道';
         });
 
-        test('When receiving a musicbot interaction without any subcommand', () => {
+        test('When receiving a musicbot interaction without any subcommand', async () => {
           interaction.commandName = 'musicbot';
       
-          slashCommandHandler(client, interaction, audioPlayer);
+          await slashCommandHandler(client, interaction, audioPlayer);
       
           expect(interaction.reply).toHaveBeenCalledWith('未知的MusicBot控制指令');
         });
 
-        test('When receiving a musicbot interaction with a playsong subcommand', () => {
+        test('When receiving a musicbot interaction with a playsong subcommand', async () => {
           interaction.commandName = 'musicbot';
           interaction.options.getSubcommand = jest.fn(() => 'playsong');
       
-          slashCommandHandler(client, interaction, audioPlayer);
+          await slashCommandHandler(client, interaction, audioPlayer);
       
           expect(audioPlayer.playYoutube).toHaveBeenCalledWith('url');
         });
 
-        test('When receiving a musicbot interaction with a playlocal subcommand', () => {
+        test('When receiving a musicbot interaction with a playlocal subcommand', async () => {
           interaction.commandName = 'musicbot';
           interaction.options.getSubcommand = jest.fn(() => 'playlocal');
       
-          slashCommandHandler(client, interaction, audioPlayer);
+          await slashCommandHandler(client, interaction, audioPlayer);
       
           expect(audioPlayer.playLocal).toHaveBeenCalledWith('file');
           expect(interaction.reply).toHaveBeenCalledWith('即將播放 file');
         });
 
-        test('When receiving a musicbot interaction with a skip subcommand', () => {
+        test('When receiving a musicbot interaction with a skip subcommand', async () => {
           interaction.commandName = 'musicbot';
           interaction.options.getSubcommand = jest.fn(() => 'skip');
       
-          slashCommandHandler(client, interaction, audioPlayer);
+          await slashCommandHandler(client, interaction, audioPlayer);
       
           expect(audioPlayer.skip).toHaveBeenCalled();
           expect(interaction.reply).toHaveBeenCalledWith(generateMockEmbed('SkipMusicEmbed'));
         });
 
-        test('When receiving a musicbot interaction with a reset subcommand', () => {
+        test('When receiving a musicbot interaction with a reset subcommand', async () => {
           interaction.commandName = 'musicbot';
           interaction.options.getSubcommand = jest.fn(() => 'reset');
     
-          slashCommandHandler(client, interaction, audioPlayer);
+          await slashCommandHandler(client, interaction, audioPlayer);
       
           expect(audioPlayer.disconnectVoiceChannel).toHaveBeenCalled();
           expect(interaction.reply).toHaveBeenCalledWith(generateMockEmbed('ResetAudioPlayerEmbed'));
         });
 
-        test('When receiving a musicbot interaction with a fuckout subcommand', () => {
+        test('When receiving a musicbot interaction with a fuckout subcommand', async () => {
           interaction.commandName = 'musicbot';
           interaction.options.getSubcommand = jest.fn(() => 'fuckout');
     
-          slashCommandHandler(client, interaction, audioPlayer);
+          await slashCommandHandler(client, interaction, audioPlayer);
       
           expect(audioPlayer.disconnectVoiceChannel).toHaveBeenCalled();
           expect(interaction.reply).toHaveBeenCalledWith(generateMockEmbed('ResetAudioPlayerEmbed'));
         });
 
-        test('When receiving a musicbot interaction with a loop subcommand', () => {
+        test('When receiving a musicbot interaction with a loop subcommand', async () => {
           interaction.commandName = 'musicbot';
           interaction.options.getSubcommand = jest.fn(() => 'loop');
 
-          slashCommandHandler(client, interaction, audioPlayer);
+          await slashCommandHandler(client, interaction, audioPlayer);
       
           expect(audioPlayer.toggleLooping).toHaveBeenCalled();
           expect(interaction.reply).toHaveBeenCalledWith(generateMockEmbed('ToggleAudioPlayerLoopingEmbed'));

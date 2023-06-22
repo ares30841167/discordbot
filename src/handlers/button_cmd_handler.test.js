@@ -60,9 +60,9 @@ describe('Test buttonCommandHandler', () => {
       interaction.isButton = jest.fn(() => false);
     });
 
-    test('When receiving any interaction', () => {
+    test('When receiving any interaction', async () => {
   
-      buttonCommandHandler(client, interaction, audioPlayer);
+      await buttonCommandHandler(client, interaction, audioPlayer);
   
       expect(interaction.reply).not.toHaveBeenCalled();
     });
@@ -75,10 +75,10 @@ describe('Test buttonCommandHandler', () => {
       interaction.isButton = jest.fn(() => true);
     });
 
-    test('When receiving a unknown interaction', () => {
+    test('When receiving a unknown interaction', async () => {
       interaction.customId = null;
   
-      buttonCommandHandler(client, interaction, audioPlayer);
+      await buttonCommandHandler(client, interaction, audioPlayer);
   
       expect(interaction.reply).toHaveBeenCalledWith('未知的指令');
     });
@@ -89,10 +89,10 @@ describe('Test buttonCommandHandler', () => {
         interaction.member.voice.channel = null;
       });
 
-      test('When receiving a queue muisc interaction', () => {
+      test('When receiving a queue muisc interaction', async () => {
         interaction.customId = 'queue-music';
 
-        buttonCommandHandler(client, interaction, audioPlayer);
+        await buttonCommandHandler(client, interaction, audioPlayer);
     
         expect(interaction.reply).toHaveBeenCalledWith('請加入語音頻道以使用此功能!');
       });
@@ -111,10 +111,10 @@ describe('Test buttonCommandHandler', () => {
           interaction.channel.id = '點歌頻道';
         });
 
-        test('When receiving a queue muisc interaction', () => {
+        test('When receiving a queue muisc interaction', async () => {
           interaction.customId = 'queue-music';
       
-          buttonCommandHandler(client, interaction, audioPlayer);
+          await buttonCommandHandler(client, interaction, audioPlayer);
       
           expect(audioPlayer.playYoutube).toHaveBeenCalledWith('url');
         });

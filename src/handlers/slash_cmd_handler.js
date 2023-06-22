@@ -4,7 +4,7 @@ const { generateResetAudioPlayerEmbed } = require('../templates/embeds/reset_aud
 const { generateToggleAudioPlayerLoopingEmbed } = require('../templates/embeds/toggle_audio_player_looping');
 const { generateMusicPlayerCtrlActionRow } = require('../templates/rows/music_player_control_buttons');
 
-function slashCommandHandler(client, interaction, audioPlayer) {
+async function slashCommandHandler(client, interaction, audioPlayer) {
 
     if (!interaction.isCommand()) return;
 
@@ -13,16 +13,16 @@ function slashCommandHandler(client, interaction, audioPlayer) {
 	switch(commandName) {
         case 'musicbot':
             if(interaction.member.voice.channel == null){
-                interaction.reply("請加入語音頻道以使用此功能!"); 
+                await interaction.reply("請加入語音頻道以使用此功能!"); 
                 return;
             }
 
             if(interaction.channel.id != process.env.SONG_REQUEST_CHANNEL_ID){   //在非點歌頻道中點歌
                 const c = client.channels.cache.get(process.env.SONG_REQUEST_CHANNEL_ID);
                 if(c == null)
-                    interaction.reply("還敢不在點歌頻道裡點歌阿！");
+                    await interaction.reply("還敢不在點歌頻道裡點歌阿！");
                 else
-                    interaction.reply("還敢不在「" + c.name  + "」裡點歌阿！");
+                    await interaction.reply("還敢不在「" + c.name  + "」裡點歌阿！");
                 return;
             }
 
@@ -31,7 +31,7 @@ function slashCommandHandler(client, interaction, audioPlayer) {
             switch(interaction.options.getSubcommand()){
                 case 'playsong':
                     audioPlayer.playYoutube(interaction.options.getString('url'));
-                    interaction.deferReply();
+                    await interaction.deferReply();
                     audioPlayer.once('youtubeInfo', (info) => interaction.editReply({ 
                         embeds: [generateYoutubeInfoEmbed(info)],
                         components: [generateMusicPlayerCtrlActionRow()]
@@ -39,29 +39,29 @@ function slashCommandHandler(client, interaction, audioPlayer) {
                     break;
                 case 'playlocal':
                     audioPlayer.playLocal(interaction.options.getString('file'));
-                    interaction.reply(`即將播放 ${interaction.options.getString('file')}`);
+                    await interaction.reply(`即將播放 ${interaction.options.getString('file')}`);
                     break;
                 case 'skip':
                     audioPlayer.skip();
-                    interaction.reply({ embeds: [generateSkipMusicEmbed()] });
+                    await interaction.reply({ embeds: [generateSkipMusicEmbed()] });
                     break;
                 case 'reset':
                 case 'fuckout':
                     audioPlayer.disconnectVoiceChannel();
-                    interaction.reply({ embeds: [generateResetAudioPlayerEmbed()] });
+                    await interaction.reply({ embeds: [generateResetAudioPlayerEmbed()] });
                     break;
                 case 'loop':
                     let looping = audioPlayer.toggleLooping();
-                    interaction.reply({ embeds: [generateToggleAudioPlayerLoopingEmbed(looping)] });
+                    await interaction.reply({ embeds: [generateToggleAudioPlayerLoopingEmbed(looping)] });
                     break;
                 default:
-                    interaction.reply("未知的MusicBot控制指令");
+                    await interaction.reply("未知的MusicBot控制指令");
                     break;
             }
             break;
         
         default:
-            interaction.reply("未知的指令");
+            await interaction.reply("未知的指令");
             break;
     }
 }
