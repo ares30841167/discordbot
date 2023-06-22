@@ -60,10 +60,10 @@ describe('Test messageHandler', () => {
       message.author = 'Bot';
     });
 
-    test('When receiving any message from the discord channel', () => {
+    test('When receiving any message from the discord channel', async () => {
       message.content = '測試';
     
-      messageHandler(client, message, audioPlayer);
+      await messageHandler(client, message, audioPlayer);
     
       expect(message.channel.send).not.toHaveBeenCalled();
     });
@@ -83,60 +83,60 @@ describe('Test messageHandler', () => {
         message.member.voice.channel = null;
       });
   
-      test('When receiving a message that includes 聖誕 from the discord channel', () => {
+      test('When receiving a message that includes 聖誕 from the discord channel', async () => {
         message.content = '聖誕';
 
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
       
         const attachment = generateMockAttachment('Christmas.gif');
         expect(message.channel.send).toHaveBeenCalledWith(attachment);
         expect(message.channel.send).toHaveBeenCalledWith('聖誕節快樂～');
       });
   
-      test('When receiving a message that includes 新年快樂 from the discord channel', () => {
+      test('When receiving a message that includes 新年快樂 from the discord channel', async () => {
         message.content = '新年快樂';
 
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
     
         const attachment = generateMockAttachment('c8763_LunarNewYear.jpg');
         expect(message.channel.send).toHaveBeenCalledWith(attachment);
         expect(message.channel.send).toHaveBeenCalledWith('幫你撐10秒，快給我紅包');
       });
 
-      test('When receiving a message that includes 恭喜發財 from the discord channel', () => {
+      test('When receiving a message that includes 恭喜發財 from the discord channel', async () => {
         message.content = '恭喜發財';
 
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
     
         const attachment = generateMockAttachment('c8763_LunarNewYear.jpg');
         expect(message.channel.send).toHaveBeenCalledWith(attachment);
         expect(message.channel.send).toHaveBeenCalledWith('幫你撐10秒，快給我紅包');
       });
   
-      test('When receiving a message that includes 台灣 from the discord channel', () => {
+      test('When receiving a message that includes 台灣 from the discord channel', async () => {
         message.content = '台灣';
   
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
       
         const attachment = generateMockAttachment('c8763_taiwan.jpg');
         expect(message.channel.send).toHaveBeenCalledWith(attachment);
         expect(message.channel.send).toHaveBeenCalledWith('台灣加油，有你有我 還有 スターバースト・ストリーム');
       });
   
-      test('When receiving a message that includes 胖.jpg from the discord channel', () => {
+      test('When receiving a message that includes 胖.jpg from the discord channel', async () => {
         message.content = '胖.jpg';
   
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
       
         const attachment = generateMockAttachment('fuck.JPG');
         expect(message.channel.send).toHaveBeenCalledWith(attachment);
         expect(message.channel.send).toHaveBeenCalledWith('我很瘦拉，ㄍㄋㄋ');
       });
   
-      test('When receiving a message that includes 真步 from the discord channel', () => {
+      test('When receiving a message that includes 真步 from the discord channel', async () => {
         message.content = '真步';
   
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
       
         const attachment = generateMockAttachment('DevotedSnappyAmericanshorthair-max-1mb.gif');
         expect(message.channel.send).toHaveBeenCalledWith(attachment);
@@ -145,30 +145,30 @@ describe('Test messageHandler', () => {
         expect(audioPlayer.connectVoiceChannel).not.toHaveBeenCalled();
       });
   
-      test('When receiving a message that includes 飛踢 from the discord channel', () => {
+      test('When receiving a message that includes 飛踢 from the discord channel', async () => {
         message.content = '飛踢';
   
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
       
         const attachment = generateMockAttachment('flykick.gif');
         expect(message.channel.send).toHaveBeenCalledWith(attachment);
         expect(message.channel.send).toHaveBeenCalledWith('邪神醬飛踢!');
       });
   
-      test('When receiving a message that includes 抽不到 from the discord channel', () => {
+      test('When receiving a message that includes 抽不到 from the discord channel', async () => {
         message.content = '抽不到';
   
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
       
         const attachment = generateMockAttachment('unhappy.jpg');
         expect(message.channel.send).toHaveBeenCalledWith(attachment);
         expect(message.channel.send).toHaveBeenCalledWith('抓到非洲人~');
       });
   
-      test('When receiving a message that includes steal from the discord channel', () => {
+      test('When receiving a message that includes steal from the discord channel', async () => {
         message.content = 'steal';
   
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
       
         const attachment = generateMockAttachment('steal.gif');
         expect(message.channel.send).toHaveBeenCalledWith(attachment);
@@ -177,10 +177,10 @@ describe('Test messageHandler', () => {
         expect(audioPlayer.connectVoiceChannel).not.toHaveBeenCalled();
       });
   
-      test('When receiving a message that includes 具足蟲 from the discord channel', () => {
+      test('When receiving a message that includes 具足蟲 from the discord channel', async () => {
         message.content = '具足蟲';
   
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
       
         const attachment = generateMockAttachment('具足蟲.gif');
         expect(message.channel.send).toHaveBeenCalledWith(attachment);
@@ -189,10 +189,10 @@ describe('Test messageHandler', () => {
         expect(audioPlayer.connectVoiceChannel).not.toHaveBeenCalled();
       });
   
-      test('When receiving a message that includes 鈴鼓俱樂部 from the discord channel', () => {
+      test('When receiving a message that includes 鈴鼓俱樂部 from the discord channel', async () => {
         message.content = '鈴鼓俱樂部';
   
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
       
         expect(message.channel.send).toHaveBeenCalledWith('鈴鼓俱樂部要開始了~');
         expect(message.channel.send).toHaveBeenCalledWith('https://imgur.com/a/bzNSvJ6');
@@ -205,10 +205,10 @@ describe('Test messageHandler', () => {
         message.member.voice.channel = '測試語音頻道';
       });
   
-      test('When receiving a message that includes 真步 from the discord channel', () => {
+      test('When receiving a message that includes 真步 from the discord channel', async () => {
         message.content = '真步';
   
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
       
         const attachment = generateMockAttachment('DevotedSnappyAmericanshorthair-max-1mb.gif');
         expect(message.channel.send).toHaveBeenCalledWith(attachment);
@@ -218,10 +218,10 @@ describe('Test messageHandler', () => {
         expect(audioPlayer.playLocal).toHaveBeenCalledWith('gu-lu-ling-bo-no.mp3');
       });
   
-      test('When receiving a message that includes steal from the discord channel', () => {
+      test('When receiving a message that includes steal from the discord channel', async () => {
         message.content = 'steal';
   
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
       
         const attachment = generateMockAttachment('steal.gif');
         expect(message.channel.send).toHaveBeenCalledWith(attachment);
@@ -232,10 +232,10 @@ describe('Test messageHandler', () => {
         expect(audioPlayer.playLocal).toHaveBeenCalledWith('steal.mp3');
       });
   
-      test('When receiving a message that includes 具足蟲 from the discord channel', () => {
+      test('When receiving a message that includes 具足蟲 from the discord channel', async () => {
         message.content = '具足蟲';
   
-        messageHandler(client, message, audioPlayer);
+        await messageHandler(client, message, audioPlayer);
       
         const attachment = generateMockAttachment('具足蟲.gif');
         expect(message.channel.send).toHaveBeenCalledWith(attachment);

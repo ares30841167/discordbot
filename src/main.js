@@ -38,15 +38,15 @@ client.on('ready', () => {
     console.log(`已以 ${client.user.tag} 身分登入Discord!`);
 });
 
-client.on('messageCreate', message => {
+client.on('messageCreate', async message => {
     messageHandler(client, message, audioPlayer);
 });
 
-client.on('interactionCreate', interaction => {
+client.on('interactionCreate', async interaction => {
     slashCommandHandler(client, interaction, audioPlayer);
 });
 
-client.on('interactionCreate', interaction => {
+client.on('interactionCreate', async interaction => {
     buttonCommandHandler(client, interaction, audioPlayer);
 });
 
