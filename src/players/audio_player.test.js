@@ -16,11 +16,10 @@ jest.mock('fs', () => {
 });
 jest.mock('events');
 jest.mock('ytdl-core', () => {
-  return jest.fn(() => {
-    return {
-      on: jest.fn()
-    }
-  })
+  return {
+    getInfo: jest.fn(),
+    downloadFromInfo: jest.fn().mockReturnValue('mockYoutubeStream')
+  }
 });
 jest.mock('./music_queue');
 jest.mock('@discordjs/voice', () => {
@@ -85,9 +84,7 @@ function generateMockAudioResourceOptions(type, fileName) {
 }
 
 function generateMockYoutubeStream() {
-  return {
-    on: expect.any(Function)
-  };
+  return 'mockYoutubeStream';
 }
 
 function generateMockAudioResource(type, fileName) {
@@ -212,14 +209,14 @@ describe('Test AudioPlayer', () => {
     expect(connectionSubscribeFunc).toHaveBeenCalledTimes(1);
   });
 
-  it('Should be able to play the audio file on youtube', () => {
+  it('Should be able to play the audio file on youtube', async () => {
     const voiceChannel = generateMockVoiceChannel();
     const mockYoutubeStream = generateMockYoutubeStream();
     const mockAudioResource = generateMockAudioResource('youtube', 'https://www.youtube.com');
     const mockAudioResourceOption = generateMockAudioResourceOptions('youtube', 'https://www.youtube.com');
 
     audioPlayer.connectVoiceChannel(voiceChannel);
-    audioPlayer.playYoutube('https://www.youtube.com');
+    await audioPlayer.playYoutube('https://www.youtube.com');
 
     expect(createAudioResource).toHaveBeenCalledWith(mockYoutubeStream, mockAudioResourceOption);
     const mockMusicQueueInstance = MusicQueue.mock.instances[0];

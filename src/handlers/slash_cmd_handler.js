@@ -30,25 +30,36 @@ async function slashCommandHandler(client, interaction, audioPlayer) {
 
             switch(interaction.options.getSubcommand()){
                 case 'playsong':
-                    audioPlayer.playYoutube(interaction.options.getString('url'));
                     await interaction.deferReply();
-                    audioPlayer.once('youtubeInfo', (info) => interaction.editReply({ 
-                        embeds: [generateYoutubeInfoEmbed(info)],
-                        components: [generateMusicPlayerCtrlActionRow()]
-                    }));
+                    try {
+                        const info = await audioPlayer.playYoutube(interaction.options.getString('url'));
+                        await interaction.editReply({
+                            embeds: [generateYoutubeInfoEmbed(info)],
+                            components: [generateMusicPlayerCtrlActionRow()]
+                        });
+                    } catch(e) {
+                        await interaction.editReply("播放Youtube歌曲時發生例外狀況，詳情請見Console🥲");
+                    }
                     break;
                 case 'playlocal':
+                    await interaction.deferReply();
                     audioPlayer.playLocal(interaction.options.getString('file'));
-                    await interaction.reply(`即將播放 ${interaction.options.getString('file')}`);
+                    await interaction.editReply(`即將播放 ${interaction.options.getString('file')}`);
                     break;
                 case 'skip':
-                    audioPlayer.skip();
-                    await interaction.reply({ embeds: [generateSkipMusicEmbed()] });
+                    await interaction.deferReply();
+                    try {
+                        audioPlayer.skip();
+                        await interaction.editReply({ embeds: [generateSkipMusicEmbed()] });
+                    } catch(e) {
+                        await interaction.editReply("重播歌曲時發生例外狀況，詳情請見Console🥲");
+                    }
                     break;
                 case 'reset':
                 case 'fuckout':
+                    await interaction.deferReply();
                     audioPlayer.disconnectVoiceChannel();
-                    await interaction.reply({ embeds: [generateResetAudioPlayerEmbed()] });
+                    await interaction.editReply({ embeds: [generateResetAudioPlayerEmbed()] });
                     break;
                 case 'loop':
                     let looping = audioPlayer.toggleLooping();
