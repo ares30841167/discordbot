@@ -2,6 +2,24 @@ const { AudioPlayer } = require('../players/audio_player');
 const { slashCommandHandler } = require('./slash_cmd_handler');
 
 jest.mock('../players/audio_player');
+const playYoutubeMock = jest
+  .spyOn(AudioPlayer.prototype, 'playYoutube')
+  .mockImplementation(async () => {
+    return {
+      videoDetails: {
+        title: 'foo',
+        video_url: 'foo',
+        thumbnails: [
+          {
+            url: 'foo'
+          }
+        ],
+        ownerChannelName: 'foo',
+        lengthSeconds: 0,
+        publishDate: 'foo'
+      }
+    };
+  });
 jest.mock('../templates/embeds/skip_music', () => ({
   generateSkipMusicEmbed: jest.fn(() => 'SkipMusicEmbed')
 }));
@@ -150,7 +168,7 @@ describe('Test slashCommandHandler', () => {
       
           await slashCommandHandler(client, interaction, audioPlayer);
       
-          expect(audioPlayer.playYoutube).toHaveBeenCalledWith('url');
+          expect(playYoutubeMock).toHaveBeenCalledWith('url');
         });
 
         test('When receiving a musicbot interaction with a playlocal subcommand', async () => {
@@ -160,7 +178,7 @@ describe('Test slashCommandHandler', () => {
           await slashCommandHandler(client, interaction, audioPlayer);
       
           expect(audioPlayer.playLocal).toHaveBeenCalledWith('file');
-          expect(interaction.reply).toHaveBeenCalledWith('即將播放 file');
+          expect(interaction.editReply).toHaveBeenCalledWith('即將播放 file');
         });
 
         test('When receiving a musicbot interaction with a skip subcommand', async () => {
@@ -170,7 +188,7 @@ describe('Test slashCommandHandler', () => {
           await slashCommandHandler(client, interaction, audioPlayer);
       
           expect(audioPlayer.skip).toHaveBeenCalled();
-          expect(interaction.reply).toHaveBeenCalledWith(generateMockEmbed('SkipMusicEmbed'));
+          expect(interaction.editReply).toHaveBeenCalledWith(generateMockEmbed('SkipMusicEmbed'));
         });
 
         test('When receiving a musicbot interaction with a reset subcommand', async () => {
@@ -180,7 +198,7 @@ describe('Test slashCommandHandler', () => {
           await slashCommandHandler(client, interaction, audioPlayer);
       
           expect(audioPlayer.disconnectVoiceChannel).toHaveBeenCalled();
-          expect(interaction.reply).toHaveBeenCalledWith(generateMockEmbed('ResetAudioPlayerEmbed'));
+          expect(interaction.editReply).toHaveBeenCalledWith(generateMockEmbed('ResetAudioPlayerEmbed'));
         });
 
         test('When receiving a musicbot interaction with a fuckout subcommand', async () => {
@@ -190,7 +208,7 @@ describe('Test slashCommandHandler', () => {
           await slashCommandHandler(client, interaction, audioPlayer);
       
           expect(audioPlayer.disconnectVoiceChannel).toHaveBeenCalled();
-          expect(interaction.reply).toHaveBeenCalledWith(generateMockEmbed('ResetAudioPlayerEmbed'));
+          expect(interaction.editReply).toHaveBeenCalledWith(generateMockEmbed('ResetAudioPlayerEmbed'));
         });
 
         test('When receiving a musicbot interaction with a loop subcommand', async () => {

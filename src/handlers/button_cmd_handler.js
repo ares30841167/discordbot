@@ -17,14 +17,20 @@ async function buttonCommandHandler(_, interaction, audioPlayer) {
                 return;
             }
 
-            audioPlayer.connectVoiceChannel(voiceChannel);
-            audioPlayer.playYoutube(url);
-            
             await interaction.deferReply();
-            audioPlayer.once('youtubeInfo', (info) => interaction.editReply({ 
-                embeds: [generateYoutubeInfoEmbed(info)],
-                components: [generateMusicPlayerCtrlActionRow()]
-            }));
+
+            audioPlayer.connectVoiceChannel(voiceChannel);
+
+            try{
+                const info = await audioPlayer.playYoutube(url);
+                await interaction.editReply({
+                    embeds: [generateYoutubeInfoEmbed(info)],
+                    components: [generateMusicPlayerCtrlActionRow()]
+                });
+            } catch(e) {
+                await interaction.editReply("播放Youtube歌曲時發生例外狀況，詳情請見Console🥲");
+            }
+
             break;
         default:
             await interaction.reply("未知的指令");

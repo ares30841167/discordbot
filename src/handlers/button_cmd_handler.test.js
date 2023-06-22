@@ -2,6 +2,24 @@ const { AudioPlayer } = require('../players/audio_player');
 const { buttonCommandHandler } = require('./button_cmd_handler');
 
 jest.mock('../players/audio_player');
+const playYoutubeMock = jest
+  .spyOn(AudioPlayer.prototype, 'playYoutube')
+  .mockImplementation(async () => {
+    return {
+      videoDetails: {
+        title: 'foo',
+        video_url: 'foo',
+        thumbnails: [
+          {
+            url: 'foo'
+          }
+        ],
+        ownerChannelName: 'foo',
+        lengthSeconds: 0,
+        publishDate: 'foo'
+      }
+    };
+  });
 
 function generateMockClient() {
   return {
@@ -116,7 +134,7 @@ describe('Test buttonCommandHandler', () => {
       
           await buttonCommandHandler(client, interaction, audioPlayer);
       
-          expect(audioPlayer.playYoutube).toHaveBeenCalledWith('url');
+          expect(playYoutubeMock).toHaveBeenCalledWith('url');
         });
       });
     });

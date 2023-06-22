@@ -99,15 +99,13 @@ class AudioPlayer extends EventEmitter {
     console.log("已從語音頻道斷開");
   }
 
-  #getYoutubeStream(url) {
-    const youtubeStream = ytdl(url, { 
+  #getYoutubeStream(info) {
+    const youtubeStream = ytdl.downloadFromInfo(info, { 
       filter: "audioonly",
       encoderArgs: ['-af', 'bass=g=10,dynaudnorm=f=200'],
       liveBuffer: 40000,
       highWaterMark: 1 << 30
     });
-
-    youtubeStream.on('info', (info) => this.emit('youtubeInfo', info));
 
     return youtubeStream;
   }
@@ -150,7 +148,7 @@ class AudioPlayer extends EventEmitter {
     this.#connection.subscribe(this.#player);
   }
 
-  #replay(audioResource) {
+  async #replay(audioResource) {
     switch(audioResource.metadata.type) {
       case 'file':
         this.#musicQueue.replaceCurrentAudioResource(
@@ -161,9 +159,10 @@ class AudioPlayer extends EventEmitter {
         );
         break;
       case 'youtube':
+        const info = await ytdl.getInfo(audioResource.metadata.uri);
         this.#musicQueue.replaceCurrentAudioResource(
           this.#createAudioResource(
-            this.#getYoutubeStream(audioResource.metadata.uri),
+            this.#getYoutubeStream(info),
             audioResource.metadata
           )
         );
@@ -203,9 +202,10 @@ class AudioPlayer extends EventEmitter {
     this.#tryToPlayNextResource();
   }
 
-  playYoutube(url) {
+  async playYoutube(url) {
+    const info = await ytdl.getInfo(url);
     const audioResource = this.#createAudioResource(
-      this.#getYoutubeStream(url),
+      this.#getYoutubeStream(info),
       {
         type: 'youtube',
         uri: url
@@ -213,6 +213,8 @@ class AudioPlayer extends EventEmitter {
     );
     this.#musicQueue.addAudioResource(audioResource);
     this.#tryToPlayNextResource();
+    
+    return info;
   }
 
   skip() {
