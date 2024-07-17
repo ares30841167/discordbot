@@ -15,7 +15,7 @@ jest.mock('fs', () => {
   }
 });
 jest.mock('events');
-jest.mock('ytdl-core', () => {
+jest.mock('@distube/ytdl-core', () => {
   return {
     getInfo: jest.fn(),
     downloadFromInfo: jest.fn().mockReturnValue('mockYoutubeStream')

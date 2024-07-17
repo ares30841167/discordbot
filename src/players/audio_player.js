@@ -1,6 +1,6 @@
 const { createReadStream } = require('fs')
 const EventEmitter = require('events');
-const ytdl = require('ytdl-core');
+const ytdl = require('@distube/ytdl-core');
 const { MusicQueue } = require('./music_queue');
 const { createAudioResource, createAudioPlayer, joinVoiceChannel, AudioPlayerStatus, VoiceConnectionStatus } = require('@discordjs/voice');
 
