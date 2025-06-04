@@ -14,10 +14,10 @@
   },
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
-    "@discordjs/opus": "^0.6.0",
+    "@discordjs/opus": "^0.10.0",
     "@discordjs/rest": "^0.1.0-canary.0",
     "@discordjs/voice": "^0.16.0",
-    "@distube/ytdl-core": "4.15.9",
+    "@distube/ytdl-core": "4.16.11",
     "abbrev": "^1.1.1",
     "abort-controller": "^3.0.0",
     "agent-base": "^6.0.2",
